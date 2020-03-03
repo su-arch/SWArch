@@ -1,5 +1,5 @@
 from . import app
-from app.forms import *
+from .forms import *
 
 @app.route('/')
 @app.route('/index')
