@@ -3,6 +3,7 @@ from . import app
 from .forms import *
 from .db_functions import *
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -20,3 +21,4 @@ curl localhost:5000/creat -d '{"name":"test", "age":10}' -X POST -H "Content-Typ
 #     data = request.json
 #     update(data)
 #     return Response(response=str({'msg': 'successful'}), status=200, mimetype="application/json")
+
