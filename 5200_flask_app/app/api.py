@@ -2,6 +2,8 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
+from app.validation import validate_upload, validate_update
+from app.database import query
 
 @app.route('/api', methods-['GET'])
 def api():
@@ -9,12 +11,12 @@ def api():
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
-    data = request.json #if posted using content type application/json then use request.get_json
+    data = request.get_json()
     
-    #pass data to validation module   TODO
+    #pass data to validation module
     #receive a message
-    
-    message=""
+    message = validate_upload(data)
+    #message=""
     if message == "Success":
         return jsonify(data)
     else:
@@ -22,12 +24,10 @@ def upload():
 
 @app.route('/api/query', methods=['POST'])
 def query():
-    queriedData = request.json
-    
-    #pass data for validation     TODO
+    queriedData = request.get_json()
+    #pass data for validation
     #receive message 
-    
-    message=""
+    message = validate_upload(queriedData)
     if message == "Success":
         return jsonify(queriedData)
     else:
@@ -35,13 +35,20 @@ def query():
 
 @app.route('/api/update/<addressID>', methods=['PUT'])
 def update():
-    updateData = request.json
+    updateData = request.get_json()
     addressID = updateData['addressID']
-    if addressID in checkAdressID: #a method in database to check if the adress id exists
+     #a method in database to check if the adress id exists
+    message = query(addressID)
     
-        #send updateData for validation    TODO
-        #store data in database    TODO
-    
-        return jsonify(updateData)
+    if message == "Success":
+        #send updateData for validation
+        validationMessage = validate_update(updateData)
+        if validationMessage == "Success":
+            return jsonify(updateData)
     else:
-        return render_template("error.html", message="Address ID not found!!!!")
+        return render_template("error.html", message=validationMessage), 400
+    return render_template("error.html", message="Address ID not found!!!!")
+
+
+
+
