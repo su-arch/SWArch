@@ -1,6 +1,7 @@
-from flask import render_template, request, Response
+from flask import render_template, request, Response, jsonify
 from . import app
-#from .forms import *
+from .forms import *
+from .form_factory import *
 from .db_functions import *
 
 
@@ -24,10 +25,23 @@ def download():
     #otherwise render the results on the page
     return render_template('downloadpage.html')
 
+@app.route('/country_form')
+def country_form():
+    country = request.args.get('country_select', 0, type=str)
+    print(country)
+    form, fields = country_form_factory(country)
+    fields.remove('submit')
+    fields_html = ["<input name='{}' placeholder='{}' class='dynamicForm' type='text'><class='dynamicForm' br>".format(field,field) for field in fields]
+    return jsonify(fields_html)
+    #return render_template('bootstrap-example.html', form=form, fields=list(fields))
+
 
 @app.route('/bootstrap')
 def bootstrap_page():
-    return render_template('bootstrap-example.html')
+    form, fields = country_form_factory('United States')
+    print(vars(form))
+    print(fields)
+    return render_template('bootstrap-example.html', form=form, fields=list(fields))
 
 '''
 curl localhost:5000/creat -d '{"name":"test", "age":10}' -X POST -H "Content-Type: application/json"
@@ -37,4 +51,5 @@ curl localhost:5000/creat -d '{"name":"test", "age":10}' -X POST -H "Content-Typ
 #     data = request.json
 #     update(data)
 #     return Response(response=str({'msg': 'successful'}), status=200, mimetype="application/json")
+
 

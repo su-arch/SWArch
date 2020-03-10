@@ -5,6 +5,7 @@ import json
 
 
 
+
 def validate_upload(json_str):
     data = json.loads(json_str)
     if 'Country' not in data.keys():
@@ -43,7 +44,7 @@ def validate_upload(json_str):
                     return('Failure: Invalid Postcode')
                 if not valid_alpha:
                     if not str.isnumeric(postcode):
-                        return('Failure: Invalid Postcode')
+                        return json.dumps({'status': 'Failure', 'message':'Invalid Postcode'})
         if country in RULE_VALID_PROVINCES.keys():
             province_field = 'Province' if 'Province' in required_fields else 'State'
             print('province field')
@@ -52,23 +53,48 @@ def validate_upload(json_str):
                 return('Failure: Invalid State or Province')
         #make database call here
         print('DATABASE CALL')
-        return('Success: Uploaded data')
+        #get guid on success
+        return(json.dumps({'status': 'Success', 'message':'{}'.format()}))
     except Exception as e:
         print(e)
-        return('Failure: Unknown Error occurred')
+        return json.dumps({'status': 'Failure', 'message':'Unknown Error occurred'})
 
 
+#Enforce ordering
 
 def validate_update():
+    pass
+    #TODO if in database
+
+def collapse_to_schema(country_dict):
+    collapsed_schema = {'apt': '', 'street1': '', 'street2': '',
+                        'postcode': '', 'district': '', 'city': '', 'county': '', 'state': '', 'country': ''}
+
+    current_country = country_dict['Country']
+    country_fields = country_dict.keys()
+    if 'Province' in country_fields:
+        collapsed_schema['state'] = country_dict['Province']
+    elif 'State' in country_fields:
+        collapsed_schema['state'] = country_dict['State']
+    if current_country == 'Costa Rica':
+        if 'floor' in country_dict.keys():
+            country_dict['street2'] = 'floor'
+
+
+
+
+
+
+
+def expand_from_schema(country):
     pass
 
 
 
-
-if __name__ == '__main__':
-    example_data = '{"Country": "United States", "State": "WA", "City": "Seattle", "Street 1": "123 Main St", "Postcode": 123435}'
-    res = (validate_upload(example_data))
-    print(res)
+# if __name__ == '__main__':
+#     example_data = '{"Country": "United States", "State": "WA", "City": "Seattle", "Street 1": "123 Main St", "Postcode": 123435}'
+#     res = (validate_upload(example_data))
+#     print(res)
 
 
 
