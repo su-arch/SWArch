@@ -21,7 +21,11 @@ form_fields = {'Building Number',
                'House', 'Street 2', 'Entrance', 'Zone', 'Department'}
 
 def country_form_factory(country):
-    all_fields = set(RULE_REQUIRED_FIELDS[country] + RULE_OPTIONAL_FIELDS[country])
+    if country in RULE_OPTIONAL_FIELDS.keys():
+        all_fields = set(RULE_REQUIRED_FIELDS[country] + RULE_OPTIONAL_FIELDS[country])
+    else:
+        all_fields = set(RULE_REQUIRED_FIELDS[country])
+
     print(all_fields)
     valid_provinces = False
     if country in RULE_VALID_PROVINCES.keys():

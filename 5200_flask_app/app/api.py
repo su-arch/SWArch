@@ -6,7 +6,7 @@ from .validations import validate_upload, validate_update
 from . import app
 from werkzeug.datastructures import ImmutableDict
 
-@app.route('/api', methods-['GET'])
+@app.route('/api', methods=['GET'])
 def api():
     return render_template('whatever html needed')
 
