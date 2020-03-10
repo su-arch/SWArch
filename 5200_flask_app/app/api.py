@@ -3,7 +3,6 @@ import os
 import json
 from flask.json import jsonify
 from app.validation import validate_upload, validate_update
-from app.database import query
 
 @app.route('/api', methods-['GET'])
 def api():
@@ -36,19 +35,13 @@ def query():
 @app.route('/api/update/<addressID>', methods=['PUT'])
 def update():
     updateData = request.get_json()
-    addressID = updateData['addressID']
      #a method in database to check if the adress id exists
-    message = query(addressID)
+    validationMessage = validate_update(updateData)
     
-    if message == "Success":
-        #send updateData for validation
-        validationMessage = validate_update(updateData)
-        if validationMessage == "Success":
-            return jsonify(updateData)
+    if validationMessage == "Success":
+        return jsonify(updateData)
     else:
-        return render_template("error.html", message=validationMessage), 400
-    return render_template("error.html", message="Address ID not found!!!!")
-
+        return render_template("error.html", message=validationMessage)
 
 
 
