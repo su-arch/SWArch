@@ -25,11 +25,14 @@ def download():
     #otherwise render the results on the page
     return render_template('downloadpage.html')
 
-@app.route('/country_form/<country>')
-def country_form(country):
+@app.route('/country_form')
+def country_form():
+    country = request.args.get('country_select', 0, type=str)
+    print(country)
     form, fields = country_form_factory(country)
-
-    return jsonify(fields)
+    fields.remove('submit')
+    fields_html = ["<input name='{}' placeholder='{}' class='dynamicForm' type='text'><class='dynamicForm' br>".format(field,field) for field in fields]
+    return jsonify(fields_html)
     #return render_template('bootstrap-example.html', form=form, fields=list(fields))
 
 
