@@ -109,22 +109,24 @@ def collapse_fields_to_schema(full_address):
 
 
 if __name__ == '__main__':
-    print('testing')
-    address_list = []
-    for i in range(1000000):
-        country = random.choice(list(RULE_VALID_COUNTRIES))
-        req_fields = RULE_REQUIRED_FIELDS[country]
-        address = {}
-        for field in req_fields:
-            address[field] = create_random_field(country, field)
-        collapsed_addr = collapse_fields_to_schema(address)
-        address_list.append(collapsed_addr)
-        if i % 10000 == 0:
-            print(i)
-    json_str = json.dumps(address_list)
-
-    with open('test_addresses.json', 'w') as f:
-        f.write(json_str)
+    # print('testing')
+    # address_list = []
+    # for i in range(1000000):
+    #     country = random.choice(list(RULE_VALID_COUNTRIES))
+    #     req_fields = RULE_REQUIRED_FIELDS[country]
+    #     address = {}
+    #     for field in req_fields:
+    #         address[field] = create_random_field(country, field)
+    #     collapsed_addr = collapse_fields_to_schema(address)
+    #     address_list.append(collapsed_addr)
+    #     if i % 10000 == 0:
+    #         print(i)
+    # json_str = json.dumps(address_list)
+    #
+    # with open('test_addresses.json', 'w') as f:
+    #     f.write(json_str)
+    import itertools
+    print(set(list(itertools.chain(*RULE_OPTIONAL_FIELDS.values()))))
 
 
 
