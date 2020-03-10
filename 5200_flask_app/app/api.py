@@ -2,16 +2,17 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
-from app.validation import validate_upload, validate_update
+from .validation import validate_upload, validate_update
+from . import app
+from werkzeug.datastructures import ImmutableDict
 
 @app.route('/api', methods-['GET'])
 def api():
     return render_template('whatever html needed')
 
 @app.route('/api/upload', methods=['POST'])
-def upload():
-    data = request.get_json()
-    
+def api_upload():
+    data = request.form.to_dict()
     #pass data to validation module
     #receive a message
     message = validate_upload(data)
@@ -25,7 +26,7 @@ def upload():
 
 @app.route('/api/query', methods=['POST'])
 def query():
-    queriedData = request.get_json()
+    queriedData = request.form.to_dict()
     #pass data for validation
     #receive message 
     message = validate_upload(queriedData)
@@ -38,7 +39,7 @@ def query():
 
 @app.route('/api/update/<addressID>', methods=['PUT'])
 def update():
-    updateData = request.get_json()
+    updateData = request.form.to_dict()
      #a method in database to check if the adress id exists
     validationMessage = validate_update(updateData)
     
@@ -48,10 +49,6 @@ def update():
         errorData = {"message": validationMessage,
                         "status": 400}
         return jsonify(errorData)
-
-
-
-
 
 
 
