@@ -117,10 +117,11 @@ def collapse_to_schema(country_dict):
             collapsed_schema['city'] = '{},{}'.format(collapsed_schema['city'], country_dict['Post Office Code'])
         if 'Building Number' in country_dict.keys():
             collapsed_schema['street2'] = country_dict['Building Number']
-    if current_country == 'Great Britain':
-        pass
+    if current_country in ['Great Britain', 'Isle of Man', 'Malaysia', 'Northern Ireland', 'Scotland'] and 'Building Name' in country_dict.keys():
+        collapsed_schema['street2'] = country_dict['Building Name']
+    if current_country == 'Ireland' and 'Zone' in country_dict.keys():
+        collapsed_schema['city'] = '{},{}'.format(collapsed_schema['city'], country_dict['Zone'])
     if current_country == 'Hong Kong':
-        pass
         collapsed_schema['street2'] = '{},{}'.format(country_dict['Building Name'], country_dict['Floor'])
     if current_country == 'Japan':
         collapsed_schema['street2'] = '{},{}'.format(country_dict['Block'], country_dict['Building Number'])
@@ -128,6 +129,11 @@ def collapse_to_schema(country_dict):
         collapsed_schema['apt'] = country_dict['House']
     if current_country == 'South Korea':
         collapsed_schema['apt'] = country_dict['House']
+    if current_country == 'Switzerland' and 'Building Number' in country_dict.keys():
+        collapsed_schema['street2'] = country_dict['Building Number']
+    print(json.dumps(collapsed_schema))
+    return(json.dumps(collapsed_schema))
+
 
 
 def expand_from_schema(query):
@@ -151,6 +157,47 @@ def expand_from_schema(query):
         expanded_doc['County'] = query['county']
     expanded_doc['_id'] = query['_id']
     expanded_doc['Country'] = query['country']
+    current_country = query['country']
+    if current_country == 'Argentina':
+        if query['street2'] != '':
+            expanded_doc['Floor'] = query['street2']
+        if query['apt'] != '':
+            expanded_doc['Departmnet'] = query['apt']
+    if current_country == 'Costa Rica':
+        if query['street2'] != '':
+            expanded_doc['Floor'] = query['street2']
+    if current_country == 'Czech Republic':
+        if ',' in query['city']:
+            expanded_doc['City'] = query['city'].split(',', maxsplit=1)[0]
+            expanded_doc['Post Office Code'] = query['city'].split(',', maxsplit=1)[1]
+        if query['street2'] != '':
+           expanded_doc['Building Number'] = query['street 2']
+    if current_country in ['Great Britain', 'Isle of Man', 'Malaysia', 'Northern Ireland',
+                           'Scotland'] and query['street2'] != '':
+        expanded_doc['Building Name'] = query['street2']
+    if current_country == 'Ireland':
+        if ',' in query['city']:
+            expanded_doc['City'] = query['city'].split(',', maxsplit=1)[0]
+            expanded_doc['Zone'] = query['city'].split(',', maxsplit=1)[1]
+    if current_country == 'Hong Kong':
+        if ',' in query['street2']:
+            expanded_doc['Building Name'] = query['street2'].split(',', maxsplit=1)[0]
+            expanded_doc['Floor'] = query['street2'].split(',', maxsplit=1)[1]
+    if current_country == 'Japan':
+        if ',' in query['street2']:
+            expanded_doc['Block'] = query['street2'].split(',', maxsplit=1)[0]
+            expanded_doc['Building Number'] = query['street2'].split(',', maxsplit=1)[1]
+    if current_country == 'Pakistan':
+        if query['apt'] != '':
+            expanded_doc['House'] = query['apt']
+    if current_country == 'South Korea':
+        if query['apt'] != '':
+            expanded_doc['House'] = query['apt']
+    if current_country == 'Switzerland':
+        if query['street2'] != '':
+            expanded_doc['Building Number'] = query['street2']
+    print(json.dumps(expanded_doc))
+    return json.dumps(expanded_doc)
 
 
 
