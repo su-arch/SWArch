@@ -20,12 +20,17 @@ form_fields = {'Building Number',
                'Apt Number',
                'House', 'Street 2', 'Entrance', 'Zone', 'Department'}
 
+field_order = ['Apt Number', 'House', 'Street 1', 'Street 2', 'Block',
+               'Building Name', 'Building Number', 'Entrance', 'Floor', 'Department',
+               'District', 'Zone', 'City',
+               'Postcode', 'Post Office Code', 'County', 'Province', 'State']
+
 def country_form_factory(country):
     if country in RULE_OPTIONAL_FIELDS.keys():
         all_fields = set(RULE_REQUIRED_FIELDS[country] + RULE_OPTIONAL_FIELDS[country])
     else:
         all_fields = set(RULE_REQUIRED_FIELDS[country])
-
+    all_fields = [field for field in field_order if field in all_fields]
     print(all_fields)
     valid_provinces = False
     if country in RULE_VALID_PROVINCES.keys():
@@ -47,7 +52,6 @@ def country_form_factory(country):
         if field == 'Postcode':
             setattr(FormGenerator, str.replace(field, ' ', '_'), StringField(field))
     all_fields = [str.replace(field, ' ', '_') for field in all_fields]
-    all_fields.remove('Country')
-    all_fields.append('submit')
+    print(all_fields)
     return (FormGenerator(), all_fields)
 

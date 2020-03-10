@@ -12,6 +12,7 @@
 				},
 					function (result) {
 						$(".dynamicForm").remove();
+						$('br').remove();
 						$.each(result, function (index, value) {
 							var inputField = result[index];
 							$("#addrItems").append(inputField);
@@ -44,7 +45,6 @@
 				<option value="5">Brazil</option>
 				<option value="6">Canada</option>
 				<option value="8">Chile</option>
-				<option value="9">China,PRC</option>
 				<option value="10">Costa Rica</option>
 				<option value="12">Czech Republic</option>
 				<option value="13">Denmark</option>
@@ -64,7 +64,6 @@
 				<option value="28">Israel</option>
 				<option value="29">Italy</option>
 				<option value="30">Japan</option>
-				<option value="31">Korea</option>
 				<option value="32">Latvia</option>
 				<option value="33">Luxembourg</option>
 				<option value="34">Malaysia</option>
@@ -74,11 +73,10 @@
 				<option value="40">Norway</option>
 				<option value="41">Oman</option>
 				<option value="42">Pakistan</option>
-				<option value="43">PRC</option>
 				<option value="44">Poland</option>
 				<option value="45">Portugal</option>
 				<option value="46">Puerto Rico</option>
-				<option value="47">Republic of China</option>
+				<option value="47">People's Republic of China</option>
 				<option value="48">Romania</option>
 				<option value="49">Russia</option>
 				<option value="50">Scotland</option>
