@@ -25,9 +25,9 @@ def download():
     #otherwise render the results on the page
     return render_template('downloadpage.html')
 
-@app.route('/country_form')
-def country_form():
-    form, fields = country_form_factory('United States')
+@app.route('/country_form/<country>')
+def country_form(country):
+    form, fields = country_form_factory(country)
 
     return jsonify(fields)
     #return render_template('bootstrap-example.html', form=form, fields=list(fields))
