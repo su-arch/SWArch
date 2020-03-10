@@ -44,12 +44,12 @@ def bootstrap_page():
     return render_template('bootstrap-example.html', form=form, fields=list(fields))
 
 '''
-curl localhost:5000/creat -d '{"name":"test", "age":10}' -X POST -H "Content-Type: application/json"
+curl localhost:5000/test -d '{"id": "5e6688afd64550c9d16a36c6"}' -X POST -H "Content-Type: application/json"
+curl localhost:5000/test -d '{"name": "CHILE"}' -X POST -H "Content-Type: application/json"
 '''
-# @app.route('/creat', methods=['POST']) 
+# @app.route('/test', methods=['POST']) 
 # def foo():
 #     data = request.json
-#     update(data)
+#     result = query_by_country_name(data['name'])
+#     print (result)
 #     return Response(response=str({'msg': 'successful'}), status=200, mimetype="application/json")
-
-
