@@ -130,9 +130,9 @@
       $.ajax({
               type: 'post',
               url: '/format',
-              data: {
+              data: JSON.stringify({
                 'country': selectedCountry
-              },
+              }),
               dataType: "json",
               success: function (data) {
                   console.log('Submission was successful.');
