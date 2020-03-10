@@ -4,8 +4,6 @@ import json
 
 
 
-
-
 def validate_upload(json_str):
     data = json.loads(json_str)
     if 'Country' not in data.keys():
@@ -66,6 +64,22 @@ def validate_update():
     pass
     #TODO if in database
 
+FIELD_POOL = {'Building Number',
+               'Floor',
+               'County',
+               'Street 1',
+               'City',
+               'Postcode',
+               'Province',
+               'Post Office Code',
+               'Building Name',
+               'Block',
+               'District',
+               'Country',
+               'State',
+               'Apt Number',
+               'House'}
+
 def collapse_to_schema(country_dict):
     collapsed_schema = {'apt': '', 'street1': '', 'street2': '',
                         'postcode': '', 'district': '', 'city': '', 'county': '', 'state': '', 'country': ''}
@@ -76,18 +90,67 @@ def collapse_to_schema(country_dict):
         collapsed_schema['state'] = country_dict['Province']
     elif 'State' in country_fields:
         collapsed_schema['state'] = country_dict['State']
+    if 'Street 2' in country_fields:
+        collapsed_schema['street2'] = country_dict['Street 2']
+    if 'Postcode' in country_fields:
+        collapsed_schema['postcode'] = country_dict['Postcode']
+    if 'Street 2' in country_fields:
+        collapsed_schema['street2'] = country_dict['Street 2']
+    if 'District' in country_fields:
+        collapsed_schema['district'] = country_dict['District']
+    if 'City' in country_fields:
+        collapsed_schema['city'] = country_dict['City']
+    if 'County' in country_fields:
+        collapsed_schema['county'] = country_dict['County']
+    if 'Country' in country_fields:
+        collapsed_schema['country'] = country_dict['Country']
+    if current_country == 'Argentina':
+        if 'Floor' in country_dict.keys():
+            collapsed_schema['street2'] = country_dict['Floor']
+        if 'Department' in country_dict.keys():
+            collapsed_schema['apt'] = country_dict['Department']
     if current_country == 'Costa Rica':
-        if 'floor' in country_dict.keys():
+        if 'Floor' in country_dict.keys():
             country_dict['street2'] = 'floor'
+    if current_country == 'Czech Republic':
+        if 'Post Office Code' in country_dict.keys():
+            collapsed_schema['city'] = '{},{}'.format(collapsed_schema['city'], country_dict['Post Office Code'])
+        if 'Building Number' in country_dict.keys():
+            collapsed_schema['street2'] = country_dict['Building Number']
+    if current_country == 'Great Britain':
+        pass
+    if current_country == 'Hong Kong':
+        pass
+        collapsed_schema['street2'] = '{},{}'.format(country_dict['Building Name'], country_dict['Floor'])
+    if current_country == 'Japan':
+        collapsed_schema['street2'] = '{},{}'.format(country_dict['Block'], country_dict['Building Number'])
+    if current_country == 'Pakistan':
+        collapsed_schema['apt'] = country_dict['House']
+    if current_country == 'South Korea':
+        collapsed_schema['apt'] = country_dict['House']
 
 
-
-
-
-
-
-def expand_from_schema(country):
-    pass
+def expand_from_schema(query):
+    fields = query.keys()
+    expanded_doc = {}
+    if 'state' in fields and query['country'] in []:
+        expanded_doc['State'] = query['state']
+    elif 'state' in fields and query['country'] in []:
+        expanded_doc['Province'] = query['state']
+    if 'street1' in fields:
+        expanded_doc['Street 1'] = query['street1']
+    if 'postcode' in fields:
+        expanded_doc['Postcode'] = query['postcode']
+    if 'apt' in fields:
+        expanded_doc['Apt Number'] = query['apt']
+    if 'district' in fields:
+        expanded_doc['District'] = query['district']
+    if 'city' in fields:
+        expanded_doc['City'] = query['city']
+    if 'county' in fields:
+        expanded_doc['County'] = query['county']
+    expanded_doc['_id'] = query['_id']
+    expanded_doc['Country'] = query['country']
 
 
 

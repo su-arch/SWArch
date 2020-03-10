@@ -30,6 +30,19 @@ def country_form():
     country = request.args.get('country_select', 0, type=str)
     print(country)
     form, fields = country_form_factory(country)
+    if ('State' or 'Province' in fields) and country in RULE_VALID_PROVINCES.keys():
+        opt_list = []
+        print('State found ')
+        state_dropdown_header = "<label class='dynamicForm' for='State'>State/Province</label><br> <select id='State'class='dynamicForm'>"
+        for s in RULE_VALID_PROVINCES[country]:
+            opt_html = "<option value='{}'>{}</option>".format(s,s)
+            opt_list.append(opt_html)
+        options = ''.join(opt_list)
+        state_html = state_dropdown_header + options + '</select><br>'
+        fields_html = ["<input name='{}' placeholder='{}' class='dynamicForm' type='text'><br>".format(field,field) for field in fields if field not in ['State', 'Province']]
+        fields_html = [state_html] + fields_html
+        return(jsonify(fields_html))
+
     fields_html = ["<input name='{}' placeholder='{}' class='dynamicForm' type='text'><br>".format(field,field) for field in fields]
     return jsonify(fields_html)
     #return render_template('bootstrap-example.html', form=form, fields=list(fields))
