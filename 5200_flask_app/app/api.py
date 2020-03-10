@@ -45,7 +45,7 @@ def update():
     if validationMessage == "Success":
         return jsonify(updateData)
     else:
-        errorData = {"message": message,
+        errorData = {"message": validationMessage,
                         "status": 400}
         return jsonify(errorData)
 
