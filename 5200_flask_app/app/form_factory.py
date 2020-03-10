@@ -25,6 +25,8 @@ field_order = ['Apt Number', 'House', 'Street 1', 'Street 2', 'Block',
                'District', 'Zone', 'City',
                'Postcode', 'Post Office Code', 'County', 'Province', 'State']
 
+
+
 def country_form_factory(country):
     if country in RULE_OPTIONAL_FIELDS.keys():
         all_fields = set(RULE_REQUIRED_FIELDS[country] + RULE_OPTIONAL_FIELDS[country])
