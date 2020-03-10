@@ -2,7 +2,8 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
-from app.validation import validate_upload, validate_update
+from .validation import validate_upload, validate_update
+from . import app
 from werkzeug.datastructures import ImmutableDict
 
 @app.route('/api', methods-['GET'])
