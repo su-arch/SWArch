@@ -13,7 +13,7 @@ def api():
 @app.route('/api/upload', methods=['POST'])
 def api_upload():
     data = request.form.to_dict()
-    #pass data to validation module
+    validate_upload(data)
     #receive a message
     message = validate_upload(data)
     #message=""

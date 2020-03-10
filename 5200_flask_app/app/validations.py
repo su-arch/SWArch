@@ -4,19 +4,18 @@ import json
 
 
 
-def validate_upload(json_str):
-    data = json.loads(json_str)
+def validate_upload(data):
     if 'Country' not in data.keys():
-        return('Failure: No Country Provided')
+        return json.dumps({'status': 'Failure', 'message': 'No Country Provided'})
     try:
         if data['Country'] not in RULE_VALID_COUNTRIES:
-            return('Failure: Invalid Country')
+            return json.dumps({'status': 'Failure', 'message': 'Invalid Country'})
         country = data['Country']
         required_fields = RULE_REQUIRED_FIELDS[country]
         print(required_fields)
         for field in required_fields:
             if field not in data.keys():
-                return('Failure: Required field not found')
+                return json.dumps({'status': 'Failure', 'message': 'Required Field not Found'})
         if country in RULE_VALID_POSTCODES.keys():
             postcode = str(data['Postcode'])
             print(postcode)
@@ -32,14 +31,14 @@ def validate_upload(json_str):
                 print('postcode parsed')
                 print(postcode_parsed)
                 if len(postcode_parsed[0]) != group1_len or len(postcode_parsed[1]) != group2_len:
-                    return('Failure: Invalid Postcode')
+                    return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
                 if not valid_alpha:
                     if (str.isnumeric(postcode_parsed[0]) == False) or (str.isnumeric(postcode_parsed[1]) == False):
-                        return('Faiure: Invalid Postcode')
+                        return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
             else:
                 group_len = postcode_format[0]
                 if len(postcode) != group_len:
-                    return('Failure: Invalid Postcode')
+                    return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
                 if not valid_alpha:
                     if not str.isnumeric(postcode):
                         return json.dumps({'status': 'Failure', 'message':'Invalid Postcode'})
@@ -48,7 +47,7 @@ def validate_upload(json_str):
             print('province field')
             print(province_field)
             if data[province_field] not in RULE_VALID_PROVINCES[country]:
-                return('Failure: Invalid State or Province')
+                return json.dumps({'status': 'Failure', 'message': 'Missing required province field'})
         #make database call here
         print('DATABASE CALL')
         #get guid on success
@@ -139,21 +138,22 @@ def collapse_to_schema(country_dict):
 def expand_from_schema(query):
     fields = query.keys()
     expanded_doc = {}
-    if 'state' in fields and query['country'] in []:
-        expanded_doc['State'] = query['state']
-    elif 'state' in fields and query['country'] in []:
-        expanded_doc['Province'] = query['state']
-    if 'street1' in fields:
+    if query['state'] != '':
+        if query['country'] in ['Australia', 'Mexico', 'United States']:
+            expanded_doc['State'] = query['state']
+        else:
+            expanded_doc['Province'] = query['state']
+    if query['street1'] != '':
         expanded_doc['Street 1'] = query['street1']
-    if 'postcode' in fields:
+    if query['postcode'] != '':
         expanded_doc['Postcode'] = query['postcode']
-    if 'apt' in fields:
+    if query['apt'] != '':
         expanded_doc['Apt Number'] = query['apt']
-    if 'district' in fields:
+    if query['district'] != '':
         expanded_doc['District'] = query['district']
-    if 'city' in fields:
+    if query['city'] != '':
         expanded_doc['City'] = query['city']
-    if 'county' in fields:
+    if query['county'] != '':
         expanded_doc['County'] = query['county']
     expanded_doc['_id'] = query['_id']
     expanded_doc['Country'] = query['country']
