@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField
 from wtforms.validators import DataRequired
 from app.valid_rules import RULE_REQUIRED_FIELDS, RULE_OPTIONAL_FIELDS, RULE_VALID_PROVINCES
-import random
+
 form_fields = {'Building Number',
                'Floor',
                'County',
