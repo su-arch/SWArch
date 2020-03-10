@@ -63,6 +63,7 @@ def validate_upload(json_str):
 #Enforce ordering
 
 def validate_update():
+    pass
     #TODO if in database
 
 def collapse_to_schema(country_dict):
@@ -86,14 +87,14 @@ def collapse_to_schema(country_dict):
 
 
 def expand_from_schema(country):
+    pass
 
 
 
-
-if __name__ == '__main__':
-    example_data = '{"Country": "United States", "State": "WA", "City": "Seattle", "Street 1": "123 Main St", "Postcode": 123435}'
-    res = (validate_upload(example_data))
-    print(res)
+# if __name__ == '__main__':
+#     example_data = '{"Country": "United States", "State": "WA", "City": "Seattle", "Street 1": "123 Main St", "Postcode": 123435}'
+#     res = (validate_upload(example_data))
+#     print(res)
 
 
 
