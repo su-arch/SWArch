@@ -6,14 +6,24 @@
       
       <h1>International Address Form</h1>
       
-    </div> 
-
-    <form action="/result" method="post">
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".Country").on(change, function(){
+          $.getJSON($SCRIPT_ROOT + '/routename', function(result){
+          $.each(result, function(i, value){
+            $(".form").append('<input type="text" name="formInput" id="inputID" />');
+          });
+          });
+        });
+      });
+    </script>
+    <form action="/result" method="post" class="form">
       <div class="title">
         <i class="fas fa-search"></i></i><h2> Please Select Country</h2>
       </div>
       <div class="info">
-        <select name="country" id="country">
+        <select name="country" id="country" class="Country">
           <option value="">Country</option>
         <option value = "1">Argentina</option>
               <option value = "2">Australia</option>
