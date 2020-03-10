@@ -5,9 +5,25 @@ from .db_functions import *
 
 
 @app.route('/')
-@app.route('/index')
-def index():
-    return render_template('welcomepage.html')
+@app.route('/upload')
+def upload():
+    #if request is POST
+    #POST the data to the /api/upload
+    #get the JSON response from the API
+    #if the response is error render error page
+    #otherwise render the results on the page
+    return render_template('uploadpage.html')
+
+
+@app.route('/query')
+def download():
+    #if request is POST
+    #POST the data to the /api/query/route
+    #get the JSON response from the API
+    #if the response is error render error page
+    #otherwise render the results on the page
+    return render_template('downloadpage.html')
+
 
 @app.route('/bootstrap')
 def bootstrap_page():
