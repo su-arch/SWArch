@@ -19,7 +19,9 @@ def upload():
     if message == "Success":
         return jsonify(data)
     else:
-        return render_template('error.html', message = message), 400
+        errorData = {"message": message,
+                        "status": 400}
+        return jsonify(errorData)
 
 @app.route('/api/query', methods=['POST'])
 def query():
@@ -30,7 +32,9 @@ def query():
     if message == "Success":
         return jsonify(queriedData)
     else:
-        return render_template('error.html', message = message), 400
+        errorData = {"message": message,
+                        "status": 400}
+        return jsonify(errorData)
 
 @app.route('/api/update/<addressID>', methods=['PUT'])
 def update():
@@ -41,7 +45,13 @@ def update():
     if validationMessage == "Success":
         return jsonify(updateData)
     else:
-        return render_template("error.html", message=validationMessage)
+        errorData = {"message": message,
+                        "status": 400}
+        return jsonify(errorData)
+
+
+
+
 
 
 
