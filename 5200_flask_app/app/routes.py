@@ -7,7 +7,7 @@ from .db_functions import *
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Here is the top level index page for the webapp!"
+    return render_template('welcomepage.html')
 
 @app.route('/bootstrap')
 def bootstrap_page():
