@@ -2,16 +2,16 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
-from .validation import validate_upload, validate_update
+from .validations import validate_upload, validate_update
 from . import app
 from werkzeug.datastructures import ImmutableDict
 
-@app.route('/api', methods-['GET'])
+@app.route('/api', methods=['GET'])
 def api():
     return render_template('whatever html needed')
 
 @app.route('/api/upload', methods=['POST'])
-def upload():
+def api_upload():
     data = request.form.to_dict()
     #pass data to validation module
     #receive a message
