@@ -19,6 +19,7 @@
 				},
 					function (result) {
 						$(".dynamicForm").remove();
+						$('br').remove();
 						$.each(result, function (index, value) {
 							var inputField = result[index];
 							$("#addrItems").append(inputField);
