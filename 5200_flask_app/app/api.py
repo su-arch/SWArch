@@ -11,44 +11,40 @@ def api():
     return render_template('whatever html needed')
 
 @app.route('/api/upload', methods=['POST'])
-def api_upload():
-    data = request.form.to_dict()
-    #pass data to validation module
+def upload():
+    data = request.json #if posted using content type application/json then use request.get_json
+    
+    #pass data to validation module   TODO
     #receive a message
-    message = validate_upload(data)
-    #message=""
+    
+    message=""
     if message == "Success":
         return jsonify(data)
     else:
-        errorData = {"message": message,
-                        "status": 400}
-        return jsonify(errorData)
+        return render_template('error.html', message = message), 400
 
 @app.route('/api/query', methods=['POST'])
 def query():
-    queriedData = request.form.to_dict()
-    #pass data for validation
+    queriedData = request.json
+    
+    #pass data for validation     TODO
     #receive message 
-    message = validate_upload(queriedData)
+    
+    message=""
     if message == "Success":
         return jsonify(queriedData)
     else:
-        errorData = {"message": message,
-                        "status": 400}
-        return jsonify(errorData)
+        return render_template('error.html', message = message), 400
 
 @app.route('/api/update/<addressID>', methods=['PUT'])
 def update():
-    updateData = request.form.to_dict()
-     #a method in database to check if the adress id exists
-    validationMessage = validate_update(updateData)
+    updateData = request.json
+    addressID = updateData['addressID']
+    if addressID in checkAdressID: #a method in database to check if the adress id exists
     
-    if validationMessage == "Success":
+        #send updateData for validation    TODO
+        #store data in database    TODO
+    
         return jsonify(updateData)
     else:
-        errorData = {"message": validationMessage,
-                        "status": 400}
-        return jsonify(errorData)
-
-
-
+        return render_template("error.html", message="Address ID not found!!!!")
