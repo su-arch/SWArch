@@ -2,14 +2,15 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
-from app.validation import validate_upload, validate_update
+from .validations import validate_upload, validate_update
+from . import app
 
-@app.route('/api', methods-['GET'])
+@app.route('/api', methods=['GET'])
 def api():
     return render_template('whatever html needed')
 
 @app.route('/api/upload', methods=['POST'])
-def upload():
+def api_upload():
     data = request.get_json()
     
     #pass data to validation module
