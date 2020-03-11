@@ -32,6 +32,7 @@ def download():
     #otherwise render the results on the page
     return render_template('downloadpage.html')
 
+
 @app.route('/country_form')
 def country_form():
     country = request.args.get('country_select', 0, type=str)

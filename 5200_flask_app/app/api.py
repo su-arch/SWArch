@@ -23,8 +23,10 @@ def api_upload():
 @app.route('/api/query', methods=['POST'])
 def query():
     queriedData = request.get_json()
+    print(queriedData)
     #pass data for validation
-    #receive message 
+    #receive message
+    print(queriedData)
     result = validate_query(queriedData)
     return jsonify(result)
 
