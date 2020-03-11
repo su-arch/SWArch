@@ -57,7 +57,7 @@ def validate_upload(data):
         db_query = db_funcs.query(data)
         print(db_query)
         if(len(db_query) > 0):
-            return({'status': 'Failure', 'message': 'Entry already database'})
+            return({'status': 'Failure', 'message': 'Entry already in database'})
         id = db_funcs.create(data)
         print(id)
         #get guid on success

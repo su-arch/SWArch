@@ -13,7 +13,7 @@ def upload():
     print(data)
     if request.method == 'POST':
         response = requests.post('http://localhost:5000/api/upload', json=data)
-        render_template('result.html', message=response)
+        render_template('result.html', message=response.content)
     #POST the data to the /api/upload
     #get the JSON response from the API
     #render the results on the page
@@ -23,8 +23,9 @@ def upload():
 @app.route('/query', methods=['GET', 'POST'])
 def download():
     if request.method == 'POST':
+        data = request.form.to_dict()
         response = requests.post('http://localhost:5000/api/query', json=data)
-        render_template('result.html', message=response)
+        return(render_template('result.html', message=response.content))
 
     #get the JSON response from the API
     #if the response is error render error page
