@@ -121,7 +121,10 @@ def validate_query(data):
                 return ({'status': 'Failure', 'message': 'Missing required province field'})
         #make database call here
         print('DATABASE CALL')
+        data = collapse_to_schema(data)
         res = db_funcs.query(data)
+        res = expand_from_schema(res)
+        print(res)
         return({'status': 'Success', 'data': res})
     except:
         return({'status': 'Failure', 'message': 'Unknown error'})
@@ -181,7 +184,9 @@ def validate_update(data, route_id):
         query = db_funcs.query({'_id': id})
         if len(query) < 1:
             return ({'status': 'Failure', 'message': 'Entry not found'})
-        updated_data = db_funcs.update(id)
+        data = collapse_to_schema(data)
+        updated_data = db_funcs.update(data)
+        updated_data = expand_from_schema(updated_data)
         return({'status': 'Success', 'data': updated_data})
     except:
         return {'status': 'Failure', 'message': 'Unknown error'}
