@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import os
 import json
 from flask.json import jsonify
-from .validations import validate_upload, validate_update
+from .validations import validate_upload, validate_update, validate_query
 from . import app
 from werkzeug.datastructures import ImmutableDict
 
@@ -25,7 +25,7 @@ def query():
     queriedData = request.get_json()
     #pass data for validation
     #receive message 
-    result = validate_upload(queriedData)
+    result = validate_query(queriedData)
     return jsonify(result)
 
 
