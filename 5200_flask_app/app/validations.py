@@ -74,11 +74,23 @@ def validate_query(data):
             data['Country'] = data.pop('country')
         else:
             return ({'status': 'Failure', 'message': 'No Country Provided'})
-    # try:
+    try:
         if data['Country'] == 'All Countries':
-            data.pop('Country')
-            data = db_funcs.query(data)
-            return({'status': 'Success', 'data': data})
+            print(data)
+            data = collapse_to_schema(data)
+            print(data)
+            data.pop('country')
+            print(data)
+            res = db_funcs.query(data)
+            print(res)
+            result_list = []
+            for result in res:
+                print(result)
+                result['_id'] = str(result.pop('_id'))
+                result_list.append(expand_from_schema(result))
+            if len(result_list) == 0:
+                return({'status': 'Success', 'message': 'No data returned'})
+            return ({'status': 'Success', 'data': result_list})
         if data['Country'] not in RULE_VALID_COUNTRIES:
             return ({'status': 'Failure', 'message': 'Invalid Country'})
         country = data['Country']
@@ -122,6 +134,7 @@ def validate_query(data):
         #make database call here
         print('DATABASE CALL')
         data = collapse_to_schema(data)
+        print(data)
         res = db_funcs.query(data)
         result_list = []
         print(res)
@@ -131,9 +144,9 @@ def validate_query(data):
             result_list.append(expand_from_schema(result))
         print(res)
         return({'status': 'Success', 'data': result_list})
-    # except Exception as e:
-    #     print(e)
-    #     return({'status': 'Failure', 'message': 'Unknown error'})
+    except Exception as e:
+        print(e)
+        return({'status': 'Failure', 'message': 'Unknown error'})
 
 
 
@@ -221,10 +234,12 @@ def collapse_to_schema(country_dict):
                         'postcode': '', 'district': '', 'city': '', 'county': '', 'state': '', 'country': ''}
     current_country = country_dict['Country']
     country_fields = country_dict.keys()
-    if 'Province' in country_fields:
+    if 'Province' in country_fields and country_dict['Province'] != '':
         collapsed_schema['state'] = country_dict['Province']
-    elif 'State' in country_fields:
+    elif 'State' in country_fields and country_dict['State'] != '':
         collapsed_schema['state'] = country_dict['State']
+    if 'Street 1' in country_fields:
+        collapsed_schema['street1'] = country_dict['Street 1']
     if 'Street 2' in country_fields:
         collapsed_schema['street2'] = country_dict['Street 2']
     if 'Postcode' in country_fields:
@@ -266,6 +281,7 @@ def collapse_to_schema(country_dict):
         collapsed_schema['apt'] = country_dict['House']
     if current_country == 'Switzerland'.upper() and 'Building Number' in country_dict.keys():
         collapsed_schema['street2'] = country_dict['Building Number']
+    print('collapsed schema')
     print(json.dumps(collapsed_schema))
     return(collapsed_schema)
 
