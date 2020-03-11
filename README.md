@@ -26,7 +26,7 @@
 * When calling the `API` for upload or query, `Country Data` must always be provided in `JSON` format.
 * `API` provides `four` endpoints.
 * The `home(/api)` endpoint gives information about accessible endpoints and accepted data format.
-* The `upload(/api/upload)` and `query(/api/query)` endpoints are invoked by the UI to upload and query the address data. 
+* The `upload(/api/upload)` and `query(/api/query)` endpoints are invoked by the UI through `POST` requests to upload and query the address data. 
 * The address can also be directly updated using `/api/update/{addressID}` endpont. This accepts the `PUT` requests and expects `JSON` payload with the addressID.  
 
 ## Database
