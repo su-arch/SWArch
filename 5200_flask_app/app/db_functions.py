@@ -6,9 +6,9 @@ from bson.objectid import ObjectId
 
 
 # use cloud db
-# client = MongoClient("mongodb+srv://admin:seattleu@arch-mvj4y.azure.mongodb.net/arch?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+client = MongoClient("mongodb+srv://admin:seattleu@arch-mvj4y.azure.mongodb.net/arch?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
 # use local db, 27017 is the default port; if you want to use another one, it should be updated;
-client = MongoClient('127.0.0.1', 27017)
+#client = MongoClient('127.0.0.1', 27017)
 db=client.arch
 address_collecion = db.addresses
 
