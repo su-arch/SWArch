@@ -74,7 +74,7 @@ def validate_query(data):
             data['Country'] = data.pop('country')
         else:
             return ({'status': 'Failure', 'message': 'No Country Provided'})
-    try:
+    # try:
         if data['Country'] == 'All Countries':
             data.pop('Country')
             data = db_funcs.query(data)
@@ -123,11 +123,17 @@ def validate_query(data):
         print('DATABASE CALL')
         data = collapse_to_schema(data)
         res = db_funcs.query(data)
-        res = expand_from_schema(res)
+        result_list = []
         print(res)
-        return({'status': 'Success', 'data': res})
-    except:
-        return({'status': 'Failure', 'message': 'Unknown error'})
+        for result in res:
+            print(result)
+            result['_id'] = str(result.pop('_id'))
+            result_list.append(expand_from_schema(result))
+        print(res)
+        return({'status': 'Success', 'data': result_list})
+    # except Exception as e:
+    #     print(e)
+    #     return({'status': 'Failure', 'message': 'Unknown error'})
 
 
 
@@ -186,9 +192,12 @@ def validate_update(data, route_id):
             return ({'status': 'Failure', 'message': 'Entry not found'})
         data = collapse_to_schema(data)
         updated_data = db_funcs.update(data)
-        updated_data = expand_from_schema(updated_data)
-        return({'status': 'Success', 'data': updated_data})
-    except:
+        result_list= []
+        for result in updated_data:
+            result_list.append(expand_from_schema(result))
+        return({'status': 'Success', 'data': result_list})
+    except Exception as e:
+        print(e)
         return {'status': 'Failure', 'message': 'Unknown error'}
 
 FIELD_POOL = {'Building Number',
@@ -263,7 +272,6 @@ def collapse_to_schema(country_dict):
 
 
 def expand_from_schema(query):
-    query = json.loads(query)
     expanded_doc = {}
     if query['state'] != '':
         if query['country'] in ['Australia'.upper(), 'Mexico'.upper(), 'United States'.upper()]:
@@ -323,8 +331,7 @@ def expand_from_schema(query):
     if current_country == 'Switzerland'.upper():
         if query['street2'] != '':
             expanded_doc['Building Number'] = query['street2']
-    print(json.dumps(expanded_doc))
-    return json.dumps(expanded_doc)
+    return expanded_doc
 
 
 
