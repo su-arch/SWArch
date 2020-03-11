@@ -1,21 +1,24 @@
 from app.valid_rules import RULE_REQUIRED_FIELDS, RULE_VALID_COUNTRIES, \
     RULE_ALPHANUMERIC_POSTCODES, RULE_OPTIONAL_FIELDS, RULE_VALID_POSTCODES, RULE_VALID_PROVINCES
 import json
-
+import app.db_functions as db_funcs
 
 
 def validate_upload(data):
     if 'Country' not in data.keys():
-        return json.dumps({'status': 'Failure', 'message': 'No Country Provided'})
+        if 'country' in data.keys():
+            data['Country'] = data.pop('country')
+        else:
+            return ({'status': 'Failure', 'message': 'No Country Provided'})
     try:
         if data['Country'] not in RULE_VALID_COUNTRIES:
-            return json.dumps({'status': 'Failure', 'message': 'Invalid Country'})
+            return ({'status': 'Failure', 'message': 'Invalid Country'})
         country = data['Country']
         required_fields = RULE_REQUIRED_FIELDS[country]
         print(required_fields)
         for field in required_fields:
             if field not in data.keys():
-                return json.dumps({'status': 'Failure', 'message': 'Required Field not Found'})
+                return ({'status': 'Failure', 'message': 'Required Field not Found'})
         if country in RULE_VALID_POSTCODES.keys():
             postcode = str(data['Postcode'])
             print(postcode)
@@ -31,37 +34,157 @@ def validate_upload(data):
                 print('postcode parsed')
                 print(postcode_parsed)
                 if len(postcode_parsed[0]) != group1_len or len(postcode_parsed[1]) != group2_len:
-                    return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
                 if not valid_alpha:
                     if (str.isnumeric(postcode_parsed[0]) == False) or (str.isnumeric(postcode_parsed[1]) == False):
-                        return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
+                        return ({'status': 'Failure', 'message': 'Invalid Postcode'})
             else:
                 group_len = postcode_format[0]
                 if len(postcode) != group_len:
-                    return json.dumps({'status': 'Failure', 'message': 'Invalid Postcode'})
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
                 if not valid_alpha:
                     if not str.isnumeric(postcode):
-                        return json.dumps({'status': 'Failure', 'message':'Invalid Postcode'})
+                        return ({'status': 'Failure', 'message':'Invalid Postcode'})
         if country in RULE_VALID_PROVINCES.keys():
             province_field = 'Province' if 'Province' in required_fields else 'State'
             print('province field')
             print(province_field)
             if data[province_field] not in RULE_VALID_PROVINCES[country]:
-                return json.dumps({'status': 'Failure', 'message': 'Missing required province field'})
+                return ({'status': 'Failure', 'message': 'Missing required province field'})
         #make database call here
         print('DATABASE CALL')
+        data = collapse_to_schema(data)
+        db_query = db_funcs.query(data)
+        print(db_query)
+        if(len(db_query) > 0):
+            return({'status': 'Failure', 'message': 'Entry already database'})
+        id = db_funcs.create(data)
+        print(id)
         #get guid on success
-        return(json.dumps({'status': 'Success', 'message':'{}'.format()}))
+        return({'status': 'Success', 'data':'{}'.format(id)})
     except Exception as e:
         print(e)
         return json.dumps({'status': 'Failure', 'message':'Unknown Error occurred'})
 
 
 #Enforce ordering
+def validate_query(data):
+    if 'Country' not in data.keys():
+        if 'country' in data.keys():
+            data['Country'] = data.pop('country')
+        else:
+            return ({'status': 'Failure', 'message': 'No Country Provided'})
+    try:
+        if data['Country'] == 'All Countries':
+            data.pop('Country')
+            data = db_funcs.query(data)
+            return({'status': 'Success', 'data': data})
+        if data['Country'] not in RULE_VALID_COUNTRIES:
+            return ({'status': 'Failure', 'message': 'Invalid Country'})
+        country = data['Country']
+        required_fields = RULE_REQUIRED_FIELDS[country]
+        print(required_fields)
+        for field in required_fields:
+            if field not in data.keys():
+                return ({'status': 'Failure', 'message': 'Required Field not Found'})
+        if country in RULE_VALID_POSTCODES.keys():
+            postcode = str(data['Postcode'])
+            print(postcode)
+            valid_alpha = False
+            if country in RULE_ALPHANUMERIC_POSTCODES:
+                valid_alpha = True
+            postcode_format = RULE_VALID_POSTCODES[country]
+            if len(postcode_format) > 1:
+                sep = postcode_format[-1]
+                group1_len = postcode_format[0]
+                group2_len = postcode_format[1]
+                postcode_parsed = str.split(postcode, sep=sep, maxsplit=1)
+                print('postcode parsed')
+                print(postcode_parsed)
+                if len(postcode_parsed[0]) != group1_len or len(postcode_parsed[1]) != group2_len:
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+                if not valid_alpha:
+                    if (str.isnumeric(postcode_parsed[0]) == False) or (str.isnumeric(postcode_parsed[1]) == False):
+                        return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+            else:
+                group_len = postcode_format[0]
+                if len(postcode) != group_len:
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+                if not valid_alpha:
+                    if not str.isnumeric(postcode):
+                        return ({'status': 'Failure', 'message':'Invalid Postcode'})
+        if country in RULE_VALID_PROVINCES.keys():
+            province_field = 'Province' if 'Province' in required_fields else 'State'
+            print('province field')
+            print(province_field)
+            if data[province_field] not in RULE_VALID_PROVINCES[country]:
+                return ({'status': 'Failure', 'message': 'Missing required province field'})
+        #make database call here
+        print('DATABASE CALL')
+        res = db_funcs.query(data)
+        return({'status': 'Success', 'data': res})
+    except:
+        return({'status': 'Failure', 'message': 'Unknown error'})
 
-def validate_update():
-    pass
-    #TODO if in database
+
+
+
+def validate_update(data, route_id):
+    try:
+        if 'addressID' not in data.keys():
+            return {'status': 'Failure', 'message': 'Missing addressID'}
+        id = data['addressID']
+        if str(id) != str(route_id):
+            return {'status': 'Failure', 'message': 'Route must match address id in payload'}
+        if data['Country'] not in RULE_VALID_COUNTRIES:
+            return ({'status': 'Failure', 'message': 'Invalid Country'})
+        country = data['Country']
+        required_fields = RULE_REQUIRED_FIELDS[country]
+        print(required_fields)
+        for field in required_fields:
+            if field not in data.keys():
+                return ({'status': 'Failure', 'message': 'Required Field not Found'})
+        if country in RULE_VALID_POSTCODES.keys():
+            postcode = str(data['Postcode'])
+            print(postcode)
+            valid_alpha = False
+            if country in RULE_ALPHANUMERIC_POSTCODES:
+                valid_alpha = True
+            postcode_format = RULE_VALID_POSTCODES[country]
+            if len(postcode_format) > 1:
+                sep = postcode_format[-1]
+                group1_len = postcode_format[0]
+                group2_len = postcode_format[1]
+                postcode_parsed = str.split(postcode, sep=sep, maxsplit=1)
+                print('postcode parsed')
+                print(postcode_parsed)
+                if len(postcode_parsed[0]) != group1_len or len(postcode_parsed[1]) != group2_len:
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+                if not valid_alpha:
+                    if (str.isnumeric(postcode_parsed[0]) == False) or (str.isnumeric(postcode_parsed[1]) == False):
+                        return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+            else:
+                group_len = postcode_format[0]
+                if len(postcode) != group_len:
+                    return ({'status': 'Failure', 'message': 'Invalid Postcode'})
+                if not valid_alpha:
+                    if not str.isnumeric(postcode):
+                        return ({'status': 'Failure', 'message':'Invalid Postcode'})
+        if country in RULE_VALID_PROVINCES.keys():
+            province_field = 'Province' if 'Province' in required_fields else 'State'
+            print('province field')
+            print(province_field)
+            if data[province_field] not in RULE_VALID_PROVINCES[country]:
+                return ({'status': 'Failure', 'message': 'Missing required province field'})
+        #make database call here
+        print('DATABASE CALL')
+        query = db_funcs.query({'_id': id})
+        if len(query) < 1:
+            return ({'status': 'Failure', 'message': 'Entry not found'})
+        updated_data = db_funcs.update(id)
+        return({'status': 'Success', 'data': updated_data})
+    except:
+        return {'status': 'Failure', 'message': 'Unknown error'}
 
 FIELD_POOL = {'Building Number',
                'Floor',
@@ -130,7 +253,7 @@ def collapse_to_schema(country_dict):
     if current_country == 'Switzerland'.upper() and 'Building Number' in country_dict.keys():
         collapsed_schema['street2'] = country_dict['Building Number']
     print(json.dumps(collapsed_schema))
-    return(json.dumps(collapsed_schema))
+    return(collapsed_schema)
 
 
 
