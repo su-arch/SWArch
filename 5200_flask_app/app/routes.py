@@ -3,23 +3,29 @@ from . import app
 from .forms import *
 from .form_factory import *
 from .db_functions import *
-
+import requests
 
 @app.route('/')
-@app.route('/upload')
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    #if request is POST
+    data = request.form.to_dict()
+    print('data')
+    print(data)
+    if request.method == 'POST':
+        response = requests.post('http://localhost:5000/api/upload', json=data)
+        render_template('result.html', message=response)
     #POST the data to the /api/upload
     #get the JSON response from the API
-    #if the response is error render error page
-    #otherwise render the results on the page
+    #render the results on the page
     return render_template('uploadpage.html')
 
 
 @app.route('/query')
 def download():
-    #if request is POST
-    #POST the data to the /api/query/route
+    if request.method == 'POST':
+        response = requests.post('http://localhost:5000/api/query', json=data)
+        render_template('result.html', message=response)
+
     #get the JSON response from the API
     #if the response is error render error page
     #otherwise render the results on the page
@@ -28,6 +34,7 @@ def download():
 @app.route('/country_form')
 def country_form():
     country = request.args.get('country_select', 0, type=str)
+
     print(country)
     form, fields = country_form_factory(country)
     if ('State' or 'Province' in fields) and country in RULE_VALID_PROVINCES.keys():

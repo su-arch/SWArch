@@ -1,87 +1,119 @@
-#This is the welcome page of our application where you make your selection and your request is processed.
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<html>
+    <!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<body>
-	<div class="main-block">
-		<div class="left-part">
-			<h1>International Address Form</h1>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}" >
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#countryDropdown").on("change", function () {
+				$.getJSON('/country_form', {
+					country_select: $('#countryDropdown').find(":selected").text()
+				},
+					function (result) {
+						$(".dynamicForm").remove();
+						$('br').remove();
+						$.each(result, function (index, value) {
+							var inputField = result[index];
+							$("#addrItems").append(inputField);
+						})
+					});
+			});
+		});
+	</script>
+</head>
+<header class="site-header">
+	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+	  <div class="container">
+		<a class="navbar-brand mr-4" href="/"><h1>International Address Form</h1></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarToggle">
 		</div>
+	  </div>
+	</nav>
+  </header>
+<div class="container">
+	<div class="main-block">
+		<!--<div class="left-part">
 
-		<form action="/api/query" method="post">
+			<h1>International Address Form</h1>
+
+		</div>-->
+
+
+		<form action="/query" method="post" class="form">
 			<div class="title">
 				<i class="fas fa-search"></i></i>
+				<div>
+					<p></p>
+				</div>
+				<h1>Query</h1>
 				<h2> Please Select Country</h2>
 			</div>
 			<div class="info">
-				<select name="country" id="country">
-					<option value="">Country</option>
-					<option value="1">Argentina</option>
-					<option value="2">Australia</option>
-					<option value="3">Austria</option>
-					<option value="4">Belgium</option>
-					<option value="5">Brazil</option>
-					<option value="6">Canada</option>
-					<option value="7">Channel Islands</option>
-					<option value="8">Chile</option>
-					<option value="9">China,PRC</option>
-					<option value="10">Costa Rica</option>
-					<option value="11">Crimea</option>
-					<option value="12">Czech Republic</option>
-					<option value="13">Denmark</option>
-					<option value="14">Estonia</option>
-					<option value="15">Fiji</option>
-					<option value="16">Finland</option>
-					<option value="17">Formosa</option>
-					<option value="18">France</option>
-					<option value="19">Germany</option>
-					<option value="20">Great Britain</option>
-					<option value="21">Greenland</option>
-					<option value="22">Hong Kong</option>
-					<option value="23">Iceland</option>
-					<option value="24">India</option>
-					<option value="25">Indonesia</option>
-					<option value="26">Ireland</option>
-					<option value="27">Isle of Man</option>
-					<option value="28">Israel</option>
-					<option value="29">Italy</option>
-					<option value="30">Japan</option>
-					<option value="31">Korea</option>
-					<option value="32">Latvia</option>
-					<option value="33">Luxembourg</option>
-					<option value="34">Malaysia</option>
-					<option value="35">Mexico</option>
-					<option value="36">Miscellaneous</option>
-					<option value="37">Netherlands</option>
-					<option value="38">New Zealand</option>
-					<option value="39">Northern Island</option>
-					<option value="40">Norway</option>
-					<option value="41">Oman</option>
-					<option value="42">Pakistan</option>
-					<option value="43">PRC</option>
-					<option value="44">Poland</option>
-					<option value="45">Portugal</option>
-					<option value="46">Puerto Rico</option>
-					<option value="47">Republic of China</option>
-					<option value="48">Romania</option>
-					<option value="49">Russia</option>
-					<option value="50">Scotland</option>
-					<option value="51">Scotland</option>
-					<option value="52">Singapore</option>
-					<option value="53">South Africa</option>
-					<option value="54">South Africa</option>
-					<option value="55">South Korea</option>
-					<option value="56">Spain</option>
-					<option value="57">Sweden</option>
-					<option value="58">Switzerland</option>
-					<option value="59">Taiwan</option>
-					<option value="60">U.K.</option>
-					<option value="61">Ukraine</option>
-					<option value="62">United Kingdom</option>
-					<option value="63">United States</option>
-					<option value="64">Uruguay</option>
-					<option value="65">Venezuela</option>
-					<option value="66">Wales</option>
+				<select name="country" id="countryDropdown">
+					<option value="All Countries">All Countries</option>
+					<option value="Argentina">Argentina</option>
+					<option value="Australia">Australia</option>
+					<option value="Austria">Austria</option>
+					<option value="Belgium">Belgium</option>
+					<option value="Brazil">Brazil</option>
+					<option value="Canada">Canada</option>
+					<option value="Chile">Chile</option>
+					<option value="Costa Rica">Costa Rica</option>
+					<option value="Czech Republic">Czech Republic</option>
+					<option value="Denmark">Denmark</option>
+					<option value="Estonia">Estonia</option>
+					<option value="Fiji">Fiji</option>
+					<option value="Finland">Finland</option>
+					<option value="France">France</option>
+					<option value="Germany">Germany</option>
+					<option value="Great Britain">Great Britain</option>
+					<option value="Greenland">Greenland</option>
+					<option value="Hong Kong">Hong Kong</option>
+					<option value="Iceland">Iceland</option>
+					<option value="India">India</option>
+					<option value="Indonesia">Indonesia</option>
+					<option value="Ireland">Ireland</option>
+					<option value="Isle of Man">Isle of Man</option>
+					<option value="Israel">Israel</option>
+					<option value="Italy">Italy</option>
+					<option value="Japan">Japan</option>
+					<option value="Korea">Korea</option>
+					<option value="Latvia">Latvia</option>
+					<option value="Luxembourg">Luxembourg</option>
+					<option value="Malaysia">Malaysia</option>
+					<option value="Mexico">Mexico</option>
+					<option value="Netherlands">Netherlands</option>
+					<option value="New Zealand">New Zealand</option>
+					<option value="Norway">Norway</option>
+					<option value="Oman">Oman</option>
+					<option value="Pakistan">Pakistan</option>
+					<option value="Poland">Poland</option>
+					<option value="Portugal">Portugal</option>
+					<option value="Puerto Rico">Puerto Rico</option>
+					<option value="People's Republic of China">People's Republic of China</option>
+					<option value="Romania">Romania</option>
+					<option value="Russia">Russia</option>
+					<option value="Scotland">Scotland</option>
+					<option value="Singapore">Singapore</option>
+					<option value="South Africa<">South Africa</option>
+					<option value="South Korea">South Korea</option>
+					<option value="Spain">Spain</option>
+					<option value="Sweden">Sweden</option>
+					<option value="Switzerland">Switzerland</option>
+					<option value="Taiwan">Taiwan</option>
+					<option value="Ukraine">Ukraine</option>
+					<option value="United States">United States</option>
+					<option value="Uruguay">Uruguay</option>
+					<option value="Venezuela">Venezuela</option>
 
 
 					{% if countries %}
@@ -91,81 +123,149 @@
 					{% endif %}
 				</select>
 				<div class="addrItems" id="addrItems">
-					<input type="text" name="name" temp_data="Street address" placeholder="Street address" /> </br>
-					<input type="text" name="name" temp_data="Street address line 2" placeholder="Street address 2" />
-					</br>
-					<input type="text" name="name" temp_data="City" placeholder="City" /></br>
-					<input type="text" name="name" temp_data="Region" placeholder="Region" /></br>
-					<input type="text" name="name" temp_data="Postal / Zip code" placeholder="Postal" /></br>
+
+
+					<!--          <input type="text" name="name" temp_data="Street address" placeholder="Street address"/> </br>-->
+					<!--          <input type="text" name="name" temp_data="Street address line 2" placeholder="Street address 2"/> </br>-->
+					<!--          <input type="text" name="name" temp_data="City" placeholder="City"/></br>-->
+					<!--          <input type="text" name="name" temp_data="Region" placeholder="Region"/></br>-->
+					<!--          <input type="text" name="name" temp_data="Postal / Zip code" placeholder="Postal"/></br>-->
 				</div>
 			</div>
 			<button type="submit" href="">Search</button>
 		</form>
+
+
+
+		<!--    <script type="text/javascript">-->
+
+		<!--      $(document).ready(function() {-->
+
+		<!--        $('#country').change(function() {-->
+		<!--          var selectedCountry = $(this).children("option:selected").text();-->
+
+		<!--          console.log(selectedCountry)-->
+
+		<!--          $('#addrItems').empty();-->
+
+		<!--          if (selectedCountry == "") {-->
+		<!--            $('#addrItems').empty();-->
+
+		<!--            $('#addrItems').append(-->
+		<!--              '<input type="text" name="Street address" temp_data="Street address" />' + -->
+		<!--              '<input type="text" name="Street address line 2" temp_data="Street address line 2" />' + -->
+		<!--              '<input type="text" name="City" temp_data="City" />' +-->
+		<!--              '<input type="text" name="Region" temp_data="Region" />' +-->
+		<!--              '<input type="text" name="Postal/Zip code" temp_data="Postal/Zip code" />'-->
+		<!--            );-->
+		<!--            return;-->
+		<!--          };-->
+
+		<!--          $.ajax({-->
+		<!--                  type: 'post',-->
+		<!--                  url: '/format',-->
+		<!--                  data: JSON.stringify({-->
+		<!--                    'country': selectedCountry-->
+		<!--                  }),-->
+		<!--                  dataType: "json",-->
+		<!--                  success: function (data) {-->
+		<!--                      console.log('Submission was successful.');-->
+		<!--                      console.log(data);-->
+
+		<!--                      lines = data[selectedCountry]-->
+
+		<!--                      for (var line of lines) {-->
+		<!--                        $('#addrItems').append('<div class="line">');-->
+
+		<!--                        for (var item of line) {-->
+		<!--                          if (item['name'] == 'postcode') {-->
+		<!--                            $('#addrItems').append(-->
+		<!--                              '<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" title="' + item['title'] + '"  pattern="' + item['pattern'] + '" required />'-->
+		<!--                            ); -->
+		<!--                          } else {-->
+		<!--                            $('#addrItems').append(-->
+		<!--                              '<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" required />'-->
+		<!--                            );-->
+		<!--                          };-->
+		<!--                        }-->
+		<!--                        $('#addrItems').append('</div>');-->
+		<!--                      };-->
+		<!--                  },-->
+		<!--                  error: function (data) {-->
+		<!--                      console.log('An error occurred.');-->
+		<!--                      console.log(data);-->
+		<!--                  }-->
+		<!--              })-->
+		<!--        });-->
+
+		<!--      })-->
+		<!--    </script>-->
 	</div>
+</div>
 </body>
-<script type="text/javascript">
+<!--<script type="text/javascript">-->
 
-	$(document).ready(function () {
+<!--	$(document).ready(function () {-->
 
-		$('#country').change(function () {
-			var selectedCountry = $(this).children("option:selected").text();
+<!--		$('#country').change(function () {-->
+<!--			var selectedCountry = $(this).children("option:selected").text();-->
 
-			console.log(selectedCountry)
+<!--			console.log(selectedCountry)-->
 
-			$('#addrItems').empty();
+<!--			$('#addrItems').empty();-->
 
-			if (selectedCountry == "") {
-				$('#addrItems').empty();
+<!--			if (selectedCountry == "") {-->
+<!--				$('#addrItems').empty();-->
 
-				$('#addrItems').append(
-					'<input type="text" name="Street address" temp_data="Street address" />' +
-					'<input type="text" name="Street address line 2" temp_data="Street address line 2" />' +
-					'<input type="text" name="City" temp_data="City" />' +
-					'<input type="text" name="Region" temp_data="Region" />' +
-					'<input type="text" name="Postal/Zip code" temp_data="Postal/Zip code" />'
-				);
-				return;
-			};
+<!--				$('#addrItems').append(-->
+<!--					'<input type="text" name="Street address" temp_data="Street address" />' +-->
+<!--					'<input type="text" name="Street address line 2" temp_data="Street address line 2" />' +-->
+<!--					'<input type="text" name="City" temp_data="City" />' +-->
+<!--					'<input type="text" name="Region" temp_data="Region" />' +-->
+<!--					'<input type="text" name="Postal/Zip code" temp_data="Postal/Zip code" />'-->
+<!--				);-->
+<!--				return;-->
+<!--			};-->
 
-			$.ajax({
-				type: 'post',
-				url: '/format',
-				data: {
-					'country': selectedCountry
-				},
-				dataType: "json",
-				success: function (data) {
-					console.log('Submission was successful.');
-					console.log(data);
+<!--			$.ajax({-->
+<!--				type: 'post',-->
+<!--				url: '/format',-->
+<!--				data: {-->
+<!--					'country': selectedCountry-->
+<!--				},-->
+<!--				dataType: "json",-->
+<!--				success: function (data) {-->
+<!--					console.log('Submission was successful.');-->
+<!--					console.log(data);-->
 
-					lines = data[selectedCountry]
+<!--					lines = data[selectedCountry]-->
 
-					for (var line of lines) {
-						$('#addrItems').append('<div class="line">');
+<!--					for (var line of lines) {-->
+<!--						$('#addrItems').append('<div class="line">');-->
 
-						for (var item of line) {
-							if (item['name'] == 'postcode') {
-								$('#addrItems').append(
-									'<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" title="' + item['title'] + '"  pattern="' + item['pattern'] + '" required />'
-								);
-							} else {
-								$('#addrItems').append(
-									'<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" required />'
-								);
-							};
-						}
-						$('#addrItems').append('</div>');
-					};
-				},
-				error: function (data) {
-					console.log('An error occurred.');
-					console.log(data);
-				}
-			})
-		});
+<!--						for (var item of line) {-->
+<!--							if (item['name'] == 'postcode') {-->
+<!--								$('#addrItems').append(-->
+<!--									'<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" title="' + item['title'] + '"  pattern="' + item['pattern'] + '" required />'-->
+<!--								);-->
+<!--							} else {-->
+<!--								$('#addrItems').append(-->
+<!--									'<input type="text" name="' + item['name'] + '" temp_data="' + item['note'] + '" required />'-->
+<!--								);-->
+<!--							};-->
+<!--						}-->
+<!--						$('#addrItems').append('</div>');-->
+<!--					};-->
+<!--				},-->
+<!--				error: function (data) {-->
+<!--					console.log('An error occurred.');-->
+<!--					console.log(data);-->
+<!--				}-->
+<!--			})-->
+<!--		});-->
 
-	})
+<!--	})-->
 
-</script>
+<!--</script>-->
 
 </html>
