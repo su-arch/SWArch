@@ -16,11 +16,11 @@ RULE_VALID_PROVINCES = {'Australia': {'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'W
                         'Mexico': {"AGS", "MOR", "NAY", "BCS", "CAM", "OAX", "COAH", "PUE", "COL", "QRO", "CHIS",
                                    "Q ROO", "CHIH", "SLP", "SIN", "DGO", "SON", "GTO", "TAB", "GRO",
                                    "TAMPS", "HGO", "TLAX", "JAL", "VER", "MEX", "YUC", "MICH", "ZAC"},
-                        'United States': {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                        'United States': ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
                                           "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
                                           "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
                                           "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-                                          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"}
+                                          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
                         }
 
 # standard is street, postcode, country and optional

@@ -20,7 +20,7 @@ def upload():
     return render_template('uploadpage.html')
 
 
-@app.route('/query')
+@app.route('/query', methods=['GET', 'POST'])
 def download():
     if request.method == 'POST':
         response = requests.post('http://localhost:5000/api/query', json=data)
