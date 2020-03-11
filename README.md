@@ -1,31 +1,31 @@
-# International Address Form
+# SWArch
 
 ## Run
 `~/SWArch/5200_flask_app: flask run`
 
 ## Docs
-[Address Sheet](https://docs.google.com/spreadsheets/d/1xICn3orrbPI6uKnEBG2G12yB0st0GDQ7WzzVTKFiuEw/edit#gid=0)
+[address sheet](https://docs.google.com/spreadsheets/d/1xICn3orrbPI6uKnEBG2G12yB0st0GDQ7WzzVTKFiuEw/edit#gid=0)
 
-[Detailed Design Documentation](https://docs.google.com/document/d/1Y2ppWUZipnUZcrbwpIJknaRZC5otsBlZKqsKTe8RTR0/edit)
+[the 3rd paper](https://docs.google.com/document/d/1Y2ppWUZipnUZcrbwpIJknaRZC5otsBlZKqsKTe8RTR0/edit)
 
 [mongoDB](https://cloud.mongodb.com/v2/5e489c3e79358e377c805caa#clusters)
 
 ## UI
-* The `UI` relies on the `Bootstrap` and `javaScript`.
-* Navigating to the `upload` page will be greeted with a drop down menu specifying country to upload.
-* Selecting a country tringgers an `Ajax` request to a `form factory` that returns correct version of form based on the country.
-* Client side validation inludes ensuring that the `required fields` for that country are not empty.
+* The `UI` relies on the `Bootstrap` and `JavaScript`.
+* Navigating to the `upload` page, you will be greeted with a drop down menu where you choose the country to upload.
+* Selecting a country triggers an `Ajax` request to a `form factory` that returns correct version of the form based on country selected.
+* Client side validation is responsible for ensuring that the `required fields` for that country are not empty.
 
 ### Form Factory
 * It is instantiated through the factory pattern.
-* It Consults rules tables for what fields should be provided for the countries.
+* It consults rules tables for the fields to be provided for countries.
 
 ## API
-* The `Api` can be invoked by both application as well as the user.
+* The `Api` can be invoked by the application as well as the user.
 * The `API` receives `POST` requests, either from the UI or from a service such as `curl`.
-* When calling the `API` for upload or query, `Country Data` must always be provided in `JSON`     format.
+* When calling the `API` for upload or query, `Country Data` must always be provided in `JSON` format.
 * `API` provides `four` endpoints.
-* The `home(/api)` endpoint gives information about the accessible endpoints and accepted data format.
+* The `home(/api)` endpoint gives information about accessible endpoints and accepted data format.
 * The `upload(/api/upload)` and `query(/api/query)` endpoints are invoked by the UI to upload and query the address data.
 * The address can also be directly updated using `/api/update/{addressID}` endpont. This accepts the `PUT` requests and expects `JSON` payload with the addressID.  
 
